@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download WARP Config</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const contentBase64 = urlParams.get('content');
+            const filename = urlParams.get('filename') || 'WARP.conf'; // Если имя файла не указано, используем WARP.conf
+
+            if (contentBase64) {
+                try {
+                    const decodedContent = atob(contentBase64);
+                    const blob = new Blob([decodedContent], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    console.log(`Downloading ${filename}...`);
+                } catch (e) {
+                    console.error('Error decoding base64 content or initiating download:', e);
+                    document.body.innerHTML = '<h1>Ошибка при загрузке файла.</h1><p>Убедитесь, что ссылка корректна.</p>';
+                }
+            } else {
+                document.body.innerHTML = '<h1>Нет данных для загрузки.</h1><p>Пожалуйста, используйте корректную ссылку с параметром "content".</p>';
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            flex-direction: column;
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <p>Если загрузка не началась автоматически, проверьте консоль браузера на наличие ошибок.</p>
+</body>
+</html>
